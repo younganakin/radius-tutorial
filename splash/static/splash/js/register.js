@@ -1,9 +1,29 @@
 $(document).ready(function () {
     $('#register_form').on('submit', function (event) {
         event.preventDefault();
-        initiateSTKPush();
+        handleRegistrationForm();
     });
 
+    function handleRegistrationForm() {
+        d3.json('http://127.0.0.1:8000/splash/api/register/', {
+            method: "POST",
+            body: JSON.stringify({
+                uname: $('#user_name').val(),
+                fname: $('#first_name').val(),
+                lname: $('#last_name').val(),
+                email: $('#email').val(),
+                contact: $('#phone_number').val(),
+            }),
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(function (data) {
+            console.log(data);
+        });
+    }
+
+    /**
     function initiateSTKPush() {
         d3.json('http://pay.brandfi.co.ke:8301/api/stkpush', {
             method: "POST",
@@ -27,6 +47,7 @@ $(document).ready(function () {
             console.log(data);
         });
     }
+     */
 
     function queryStatusOfSTKPush() {
         d3.json('http://pay.brandfi.co.ke:8301/api/stkpushquery', {
