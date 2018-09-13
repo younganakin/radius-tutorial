@@ -1,0 +1,44 @@
+{% extends "splash/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'splash/css/register.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'splash/js/register.js' %}"></script>
+{% endblock %}
+
+{% block title %}KFC Sign up{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3" id="register_div">
+        <form id="register_form">
+            <input type="hidden" id="clientId" value="1">
+            <div class="form-group text-center">
+                <img src="{% static 'splash/images/logo.png' %}" alt="logo" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" class="form-control" id="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" id="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" class="form-control" id="phone_number" required>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
