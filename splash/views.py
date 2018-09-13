@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.urls import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -33,4 +33,5 @@ def register_api(request):
                'status': '1'}
 
     r = requests.post(registration_url, params=payload)
+    # return HttpResponseRedirect(reverse('splash:index'))
     return Response(r.content)
