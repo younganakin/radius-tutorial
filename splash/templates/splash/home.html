@@ -1,0 +1,18 @@
+{% extends "splash/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'splash/css/index.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'splash/js/index.js' %}"></script>
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <p>Success</p>
+</div>
+{% endblock %}
