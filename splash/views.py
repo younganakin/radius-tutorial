@@ -25,6 +25,7 @@ def index(request):
         # headers = {'Content-type': 'application/json'}
 
         r = requests.post(login_url, params=login_params)
+        logger.debug(r.url)
         print(r.url)
         # return HttpResponseRedirect(reverse('splash:home'))
     # if a GET (or any other method) we'll create a blank form
@@ -39,7 +40,6 @@ def index(request):
 
         f = furl.furl(login_url)
         f.remove(['continue_url'])
-
         request.session['login_url'] = f.url
         request.session['continue_url'] = continue_url
         request.session['ap_name'] = ap_name

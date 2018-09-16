@@ -1,0 +1,37 @@
+{% extends "splash/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'mpesa/css/index.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block title %}Savannah Coffee House{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3" id="login_div">
+        <form id="login_form" action="{% url 'mpesa:index' %}" method="post">{% csrf_token %}
+            <div class="form-group text-center">
+                <img src="{% static 'mpesa/images/logo.png' %}" alt="logo" />
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control form-control-lg" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" class="form-control form-control-lg" id="code" name="code" required>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="form-group text-center">
+                <a href="{% url 'mpesa:payment' %}">Register to enjoy premium service</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
