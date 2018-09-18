@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 import requests
-import furl
 
 
 def index(request):
@@ -22,11 +21,9 @@ def index(request):
                         "password": code,
                         "continue_url": continue_url}
 
-        # headers = {'Content-type': 'application/json'}
-
         r = requests.post(login_url, params=login_params)
-        print(r.url)
-        return HttpResponseRedirect(r.url)
+
+        # return HttpResponseRedirect(r.url)
     # if a GET (or any other method) we'll create a blank form
     else:
         login_url = request.GET['login_url']
@@ -67,7 +64,6 @@ def register(request):
                    'status': '1'}
 
         r = requests.post(registration_url, params=payload)
-        print(r.status_code)
         return HttpResponseRedirect(reverse('splash:index'))
 
     return render(request, 'splash/register.html')
