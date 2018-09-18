@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{% static 'mpesa/css/mpesa.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'mpesa/css/pay-mpesa.css' %}" />
 {% endblock %}
 
 {% block scripts %}
@@ -12,6 +12,22 @@
 
 {% block content %}
 <div class="row">
-
+    <div class="col-sm-3" id="login_div">
+        <form id="login_form" action="{% url 'mpesa:payment' %}" method="post">{% csrf_token %}
+            <div class="form-group text-center">
+                <img src="{% static 'mpesa/images/logo.png' %}" alt="logo" />
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" class="form-control form-control-lg" id="phone_number" name="phone_number" required>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="form-group text-center">
+                <a href="{{ root_url }}">Already registered, Go back to login.</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

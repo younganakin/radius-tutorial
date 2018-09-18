@@ -1,8 +1,8 @@
-from django.http import HttpResponse
-from django.utils import timezone
+from django.http import HttpResponseRedirect
 from .background import RepeatedTimer
 from time import sleep
 from django.shortcuts import render
+from .tasks import push_query
 
 import requests
 import json
@@ -37,6 +37,7 @@ def index(request):
         ap_tags = request.GET['ap_tags']
         client_ip = request.GET['client_ip']
         client_mac = request.GET['client_mac']
+        root_url = 'http://' + request.get_host() + request.get_full_path()
 
         f = furl.furl(login_url)
         f.remove(['continue_url'])
@@ -47,21 +48,34 @@ def index(request):
         request.session['ap_tags'] = ap_tags
         request.session['client_ip'] = client_ip
         request.session['client_mac'] = client_mac
+        request.session['root_url'] = root_url
 
     return render(request, 'mpesa/index.html')
 
 
 def pay_mpesa(request):
-    return render(request, 'mpesa/pay-mpesa.html')
+    root_url = request.session['root_url']
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        phone_number = request.POST['phone_number']
+        stk_push(phone_number)
+        return HttpResponseRedirect(root_url)
+    else:
+        context = {
+            'root_url': root_url,
+        }
+
+    return render(request, 'mpesa/pay-mpesa.html', context)
 
 
-def stk_push(request):
+def stk_push(phone_number):
     push_url = 'http://pay.brandfi.co.ke:8301/api/stkpush'
 
     push_params = {
         "clientId": "2",
         "transactionType": "CustomerPayBillOnline",
-        "phoneNumber": "254701854152",
+        "phoneNumber": phone_number,
         "amount": "1",
         "callbackUrl": "http://pay.brandfi.co.ke/payfi-success",
         "accountReference": "demo",
@@ -74,71 +88,9 @@ def stk_push(request):
     parsed_json = json.loads(r.text)
 
     checkoutRequestId = parsed_json['CheckoutRequestID']
-    # it auto-starts, no need of rt.start()
-    rt = RepeatedTimer(1, print_json, checkoutRequestId)
-    try:
-        sleep(40)
-    finally:
-        rt.stop()
+    result = push_query.delay(checkoutRequestId)
 
-    print("end of timer")
+    if result:
+        result.revoke()
 
-    return HttpResponse("Hello, world. You're at the mpesa index.")
-
-
-def print_json(checkoutRequestId):
-    headers = {'Content-type': 'application/json'}
-
-    push_query_params = {
-        "clientId": "2",
-        "timestamp": timezone.now().strftime('%Y%m%d%H%M%S'),
-        "checkoutRequestId": checkoutRequestId
-    }
-
-    push_query_url = 'http://pay.brandfi.co.ke:8301/api/stkpushquery'
-
-    r = requests.post(push_query_url, json=push_query_params, headers=headers)
-
-    response_json = json.loads(r.text)
-    if check_error(response_json):
-        result = response_json['errorMessage']
-        if 'The transaction is being processed' == result:
-            response_dict = [False, result]
-            return response_dict
-    elif check_result(response_json):
-        result = re.sub("[\(\[].*?[\)\]]", "", response_json['ResultDesc'])
-        if 'Request cancelled by user' == result:
-            response_dict = [True, result]
-            return response_dict
-        elif 'Unable to lock subscriber, a transaction is already in process \
-        for the current subscriber' == result:
-            response_dict = [True, result]
-            return response_dict
-        elif 'The balance is insufficient for the transaction' == result:
-            response_dict = [True, result]
-            return response_dict
-        elif 'The service request is processed successfully' == result:
-            response_dict = [True, result]
-            success_url = 'https://cubemobile.tech/dumprequest.txt'
-            success_request = requests.get(success_url, verify=False)
-            print(success_request.text)
-            return response_dict
-        else:
-            response_dict = [True, result]
-            return response_dict
-
-
-def check_error(response_json):
-    try:
-        error_message = response_json['errorMessage']
-        return True
-    except KeyError as error:
-        return False
-
-
-def check_result(response_json):
-    try:
-        result = response_json['ResultDesc']
-        return True
-    except KeyError as error:
-        return False
+    print("end of task")

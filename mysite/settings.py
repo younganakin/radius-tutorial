@@ -157,3 +157,12 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
+
+# Other Celery settings
+CELERY_BEAT_SCHEDULE = {
+    'task-push-query': {
+        'task': 'mpesa.tasks.push_query',
+        'schedule': 1.0,
+        'args': (1,)
+    }
+}
