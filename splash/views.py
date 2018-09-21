@@ -110,7 +110,6 @@ def feedback(request):
 
 
 def payment(request):
-    root_url = request.session['root_url']
     tarrifs_url = 'http://radius.brandfi.co.ke/api/tarrifs'
 
     # if this is a POST request we need to process the form data
@@ -126,10 +125,10 @@ def payment(request):
             price = tarrif['price']
 
         stk_push(phone_number, price, first_name, last_name, user_name)
-        return HttpResponseRedirect(root_url)
+        return HttpResponseRedirect(everse('splash:home'))
     else:
         context = {
-            'root_url': root_url,
+            'root_url': "",
         }
 
     return render(request, 'splash/pay-mpesa.html', context)
