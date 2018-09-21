@@ -125,7 +125,7 @@ def payment(request):
             price = tarrif['price']
 
         stk_push(phone_number, price, first_name, last_name, user_name)
-        return HttpResponseRedirect(everse('splash:home'))
+        return HttpResponseRedirect(reverse('splash:payment'))
     else:
         context = {
             'root_url': "",
