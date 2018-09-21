@@ -23,10 +23,7 @@ def index(request):
         password = request.POST['password']
 
         login_url = request.session['login_url']
-        if username.startswith("072"):
-            success_url = 'https://www.google.com/'
-        else:
-            success_url = 'http://' + request.get_host() + reverse('splash:home')
+        success_url = 'http://' + request.get_host() + reverse('splash:home')
 
         request.session['artcafe_user'] = username
         login_params = {"username": username,
@@ -118,6 +115,9 @@ def payment(request):
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        user_name = request.POST['user_name']
         phone_number = request.POST['phone_number']
         tarrif_id = request.POST['policy']
         r = requests.get(tarrifs_url)
@@ -128,7 +128,7 @@ def payment(request):
         mobile_number = phone_number.replace("254", "0")
         request.session['mobile_number'] = mobile_number
 
-        stk_push(phone_number, price)
+        stk_push(phone_number, price, first_name, last_name, user_name)
         return HttpResponseRedirect(root_url)
     else:
         context = {
@@ -138,7 +138,7 @@ def payment(request):
     return render(request, 'splash/pay-mpesa.html', context)
 
 
-def stk_push(phone_number, price):
+def stk_push(phone_number, price, first_name, last_name, user_name):
     push_url = 'http://pay.brandfi.co.ke:8301/api/stkpush'
 
     push_params = {
@@ -156,8 +156,10 @@ def stk_push(phone_number, price):
     r = requests.post(push_url, json=push_params, headers=headers)
     parsed_json = json.loads(r.text)
     checkoutRequestId = parsed_json['CheckoutRequestID']
+    mobile_number = phone_number.replace("254", "0")
 
-    stk_push_query = STKPushQuery(checkoutRequestId, phone_number)
+    stk_push_query = STKPushQuery(
+        checkoutRequestId, mobile_number, first_name, last_name, user_name)
 
     """Example of how to send server generated events to clients."""
     while not stk_push_query.is_result:

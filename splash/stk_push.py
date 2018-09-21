@@ -6,8 +6,12 @@ import re
 
 
 class STKPushQuery(object):
-    def __init__(self, checkoutRequestId, phone_number):
+    def __init__(self, checkoutRequestId, mobile_number, first_name, last_name, user_name):
         self.checkoutRequestId = checkoutRequestId
+        self.mobile_number = mobile_number
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = user_name
         self.is_result = False
         self.result = None
 
@@ -47,12 +51,15 @@ class STKPushQuery(object):
                 response_dict = [True, result]
                 success_url = 'https://cubemobile.tech/dumprequest.txt'
                 success_request = requests.get(success_url, verify=False)
-                mobile_number = phone_number.replace("254", "0")
+                mobile_number = self.phone_number.replace("254", "0")
                 # user_exists_url = 'http://radius.brandfi.co.ke/api/user/by-phone/' + mobile_number
                 # r = requests.get(user_exists_url)
                 registration_url = 'http://radius.brandfi.co.ke/api/registration'
-                payload = {'uname': mobile_number,
-                           'contact': mobile_number,
+                payload = {'uname': self.username,
+                           'fname': self.first_name,
+                           'lname': self.last_name,
+                           'email': '',
+                           'contact': self.mobile_number,
                            'status': '1'}
 
                 r = requests.post(registration_url, params=payload)
