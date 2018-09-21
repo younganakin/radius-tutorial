@@ -2,7 +2,7 @@ $(document).ready(function () {
     $('#payment_modal').modal('hide');
     $('#payment_form').on('submit', function (event) {
         var ws4redis = WS4Redis({
-            uri: 'ws://localhost:8000/ws/foobar?subscribe-broadcast&publish-broadcast&echo',
+            uri: 'ws://http://joseph.brandfi.co.ke/ws/foobar?subscribe-broadcast&publish-broadcast&echo',
             connecting: on_connecting,
             connected: on_connected,
             receive_message: receiveMessage,
