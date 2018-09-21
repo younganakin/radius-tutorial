@@ -125,9 +125,6 @@ def payment(request):
         for tarrif in tarrifs_json:
             price = tarrif['price']
 
-        mobile_number = phone_number.replace("254", "0")
-        request.session['mobile_number'] = mobile_number
-
         stk_push(phone_number, price, first_name, last_name, user_name)
         return HttpResponseRedirect(root_url)
     else:
