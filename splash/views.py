@@ -73,8 +73,7 @@ def register(request):
                    'status': '1'}
 
         r = requests.post(registration_url, params=payload)
-        root_url = request.session['root_url']
-        return HttpResponseRedirect(root_url)
+        return HttpResponseRedirect(reverse('splash:register'))
 
     return render(request, 'splash/register.html')
 
