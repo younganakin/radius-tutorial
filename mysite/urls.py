@@ -18,6 +18,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('splash/', include('splash.urls')),
-    path('mpesa/', include('mpesa.urls')),
     path('admin/', admin.site.urls),
 ]

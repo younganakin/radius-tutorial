@@ -1,0 +1,68 @@
+{% extends "splash/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'splash/css/pay-mpesa.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'splash/js/ws4redis.js' %}"></script>
+<script type="text/javascript" src="{% static 'splash/js/pay-mpesa.js' %}"></script>
+{% endblock %}
+
+{% block title %}ArtCaffe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-5">
+
+    </div>
+    <div class="col-sm-3" id="login_div">
+        <form id="payment_form" action="{% url 'splash:payment' %}" method="post">{% csrf_token %}
+            <div class="form-group text-center">
+                <img src="{% static 'splash/images/logo.png' %}" alt="logo" />
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" class="form-control form-control-lg" id="phone_number" name="phone_number" pattern="^2547[0-9]{8}$"
+                    required>
+                <small id="phone_number" class="form-text text-muted">Example: 254726791019</small>
+            </div>
+            <div class="form-group">
+                <label for="policy">Internet Package</label>
+                <select class="form-control" id="policy" name="policy">
+                    <option value="1">Pay KES 10 valid for 5 months.</option>
+                    <option value="2">Pay KES 20 valid for 10 months.</option>
+                </select>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-artcaffee">Submit</button>
+            </div>
+            <div class="form-group text-center">
+                <a href="{{ root_url }}">Already registered, Go back to login.</a>
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" id="payment_modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="margin: 0 auto;">
+                            <h3 class="modal-title">Processing</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="margin: 0 auto;" id="payment_modal_body">
+                            <p></p>
+                        </div>
+                        <div class="modal-footer" style="margin: 0 auto;">
+                            <button type="button" class="btn btn-artcaffee" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+</div>
+{% endblock %}

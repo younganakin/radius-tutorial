@@ -1,5 +1,14 @@
-#login_div {
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
+body {
+    font-family: 'Lora', sans-serif;
+    color: #332005;
+}
+
+#login_link {
+    font-family: 'Lora', sans-serif;
+    color: #332005;
+}
+
+.form-control:focus {
+    border-color: #332005;
+    box-shadow: 0 0 5px rgba(51, 32, 5);
 }

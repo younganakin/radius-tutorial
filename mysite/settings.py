@@ -33,8 +33,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1',
 
 INSTALLED_APPS = [
     'splash.apps.SplashConfig',
-    'mpesa.apps.MpesaConfig',
     'rest_framework',
+    'ws4redis',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,12 +66,16 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ws4redis.context_processors.default',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+# WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+
+WEBSOCKET_URL = '/ws/'
 
 
 # Database
@@ -139,11 +143,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
-# Other Celery settings
-CELERY_BEAT_SCHEDULE = {
-    'task-push-query': {
-        'task': 'mpesa.tasks.push_query',
-        'schedule': 1.0,
-        'args': (1,)
-    }
+
+WS4REDIS_CONNECTION = {
+    'host': 'localhost',
+    'port': 6379,
 }
+
+WS4REDIS_EXPIRE = 60
+
+WS4REDIS_PREFIX = 'ws'
