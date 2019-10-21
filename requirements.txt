@@ -6,7 +6,7 @@ billiard==3.5.0.4
 celery==4.2.1
 certifi==2018.8.24
 chardet==3.0.4
-Django==2.1.1
+Django==2.1.11
 django-websocket-redis==0.5.2
 djangorestframework==3.8.2
 furl==1.2.1
